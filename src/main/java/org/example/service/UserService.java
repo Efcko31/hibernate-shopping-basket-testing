@@ -7,14 +7,20 @@ import org.example.repository.UserRepository;
 import org.example.repository.UserRepositoryImpl;
 import org.example.util.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;import java.util.Scanner;
 
 public class UserService {
-    private static final Scanner scanner = new Scanner(System.in);
-    private static final UserRepository userRepository = new UserRepositoryImpl();
+    private final UserRepository userRepository;
+    private final SessionFactory sessionFactory;
+
+    public UserService(UserRepository userRepository, SessionFactory sessionFactory) {
+        this.userRepository = userRepository;
+        this.sessionFactory = sessionFactory;
+    }
 
     public void addProductToUserBasket(Long userId, Long productId, Integer quantity) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
 
             UserEntity userEntity = session.get(UserEntity.class, userId);
@@ -22,8 +28,8 @@ public class UserService {
 
             if(userEntity != null && productEntity != null) {
                 BasketItemEntity basketItemEntity = new BasketItemEntity();
-                basketItemEntity.setUserEntity(userEntity);
-                basketItemEntity.setProductEntity(productEntity);
+                basketItemEntity.setUser(userEntity);
+                basketItemEntity.setProduct(productEntity);
                 basketItemEntity.setQuantity(quantity);
                 userEntity.addBasketItem(basketItemEntity);
 
@@ -58,7 +64,7 @@ public class UserService {
             } else {
                 user.getProductBasket().forEach(item ->
                         System.out.printf("  - %s | Количество: %d шт.\n",
-                                item.getProductEntity().getName(), item.getQuantity())
+                                item.getProduct().getName(), item.getQuantity())
                 );
             }
         }, () -> System.out.println("Пользователь не найден!"));

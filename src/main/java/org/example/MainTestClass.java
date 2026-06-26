@@ -1,13 +1,17 @@
 package org.example;
 
 import org.example.entity.UserEntity;
+import org.example.repository.UserRepositoryImpl;
 import org.example.service.UserService;
 import org.example.util.HibernateUtil;
+import org.hibernate.SessionFactory;
 
 import java.util.Scanner;
 
 public class MainTestClass {
-    private static final UserService userService = new UserService();
+    private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private static final UserService userService = new UserService(
+            new UserRepositoryImpl(sessionFactory), sessionFactory);
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {

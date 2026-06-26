@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
 import org.example.util.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +12,15 @@ import java.util.Optional;
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
+    private final SessionFactory sessionFactory;
+    public UserRepositoryImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
     @Override
     public void save(UserEntity userEntity) {
         log.info("DAO: Начало сохранения пользователя: {}", userEntity.getUsername());
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
             session.persist(userEntity);
             tx.commit();
@@ -27,7 +33,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<UserEntity> findById(Long id) {
         log.info("DAO: Поиск пользователя по id={}", id);
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             return Optional.ofNullable(session.get(UserEntity.class, id));
         } catch (Exception e) {
             log.error("DAO: Ошибка при поиске пользователя по id={}", id, e);
@@ -38,8 +44,8 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<UserEntity> findByIdWithBasket(Long id) {
         log.info("DAO: Поиск пользователя по id={} с загрузкой корзины (JOIN FETCH)", id);
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT u FROM User u LEFT JOIN FETCH u.productBasket WHERE u.id = :id";
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "SELECT u FROM UserEntity u LEFT JOIN FETCH u.productBasket WHERE u.id = :id";
             UserEntity userEntity = session.createQuery(hql, UserEntity.class)
                     .setParameter("id", id)
                     .uniqueResult();
@@ -53,15 +59,15 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<UserEntity> findAll() {
         log.info("DAO: Запрос списка всех пользователей");
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("FROM User", UserEntity.class).list();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM UserEntity", UserEntity.class).list();
         }
     }
 
     @Override
     public void update(UserEntity userEntity) {
         log.info("DAO: Обновление пользователя с id={}", userEntity.getId());
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
             session.merge(userEntity);
             tx.commit();
@@ -74,7 +80,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void deleteById(Long id) {
         log.info("DAO: Удаление пользователя по id={}", id);
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
             UserEntity userEntity = session.get(UserEntity.class, id);
             if (userEntity != null) {

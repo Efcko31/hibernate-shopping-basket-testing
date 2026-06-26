@@ -34,6 +34,6 @@ public class UserEntity {
             this.productBasket = new ArrayList<>();
         }
         this.productBasket.add(item);
-        item.setUserEntity(this);
+        item.setUser(this);
     }
 }
