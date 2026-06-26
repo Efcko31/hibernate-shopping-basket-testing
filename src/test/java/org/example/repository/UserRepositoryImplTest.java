@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserRepositoryImplTest extends BaseDaoTest{
+public class UserRepositoryImplTest extends BaseDaoTest {
 
     private UserRepository userRepository;
 

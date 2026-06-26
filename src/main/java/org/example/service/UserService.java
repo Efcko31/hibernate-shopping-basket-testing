@@ -4,11 +4,9 @@ import org.example.entity.BasketItemEntity;
 import org.example.entity.ProductEntity;
 import org.example.entity.UserEntity;
 import org.example.repository.UserRepository;
-import org.example.repository.UserRepositoryImpl;
-import org.example.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;import java.util.Scanner;
+import org.hibernate.Transaction;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -26,7 +24,7 @@ public class UserService {
             UserEntity userEntity = session.get(UserEntity.class, userId);
             ProductEntity productEntity = session.get(ProductEntity.class, productId);
 
-            if(userEntity != null && productEntity != null) {
+            if (userEntity != null && productEntity != null) {
                 BasketItemEntity basketItemEntity = new BasketItemEntity();
                 basketItemEntity.setUser(userEntity);
                 basketItemEntity.setProduct(productEntity);

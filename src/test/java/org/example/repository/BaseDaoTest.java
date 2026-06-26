@@ -45,30 +45,6 @@ public class BaseDaoTest {
         sessionFactory = configuration.buildSessionFactory();
     }
 
-//    @BeforeAll
-//    static void beforeAll() {
-//        Configuration configuration = new Configuration();
-//
-//        // Регистрируем сущности
-//        configuration.addAnnotatedClass(UserEntity.class);
-//        configuration.addAnnotatedClass(ProductEntity.class);
-//        configuration.addAnnotatedClass(BasketItemEntity.class);
-//
-//        // Укажи здесь URL, логин и пароль к твоей НАСТОЯЩЕЙ локальной базе данных
-//        // ВАЖНО: Тесты будут очищать таблицу 'users', поэтому лучше укажи тестовую БД (например, test_db)
-//        configuration.setProperty("hibernate.connection.url", "jdbc:postgresql://localhost:5432/hibernate_demo_db");
-//        configuration.setProperty("hibernate.connection.username", "postgres");
-//        configuration.setProperty("hibernate.connection.password", "bkmz1205");
-//        configuration.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver");
-//
-//        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-//        configuration.setProperty("hibernate.hbm2ddl.auto", "update");
-//        configuration.setProperty("hibernate.show_sql", "true");
-//        configuration.setProperty("hibernate.format_sql", "true");
-//
-//        sessionFactory = configuration.buildSessionFactory();
-//    }
-
     @AfterAll
     static void afterAll() {
         if (sessionFactory != null) {

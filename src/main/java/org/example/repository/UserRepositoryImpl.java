@@ -2,10 +2,10 @@ package org.example.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.UserEntity;
-import org.example.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +13,7 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
 
     private final SessionFactory sessionFactory;
+
     public UserRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
