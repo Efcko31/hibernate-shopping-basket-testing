@@ -58,4 +58,36 @@ public class UserRepositoryImplTest extends BaseDaoTest {
 
         assertEquals(2, users.size());
     }
+
+    @Test
+    void update_ShouldModifyUserInDatabase() {
+        UserEntity user = new UserEntity();
+        user.setUsername("BeforeUpdate");
+        user.setPassword("pass123");
+        userRepository.save(user);
+
+        user.setUsername("AfterUpdate");
+        userRepository.update(user);
+
+        Optional<UserEntity> updatedUser = userRepository.findById(user.getId());
+
+        assertTrue(updatedUser.isPresent());
+        assertEquals("AfterUpdate", updatedUser.get().getUsername());
+    }
+
+    @Test
+    void deleteById_ShouldRemoveUserFromDatabase() {
+        UserEntity user = new UserEntity();
+        user.setUsername("UserToDelete");
+        user.setPassword("deletePass");
+        userRepository.save(user);
+        Long userId = user.getId();
+
+        assertTrue(userRepository.findById(userId).isPresent());
+
+        userRepository.deleteById(userId);
+
+        Optional<UserEntity> deletedUser = userRepository.findById(userId);
+        assertTrue(deletedUser.isEmpty());
+    }
 }

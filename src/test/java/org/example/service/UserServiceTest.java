@@ -65,4 +65,38 @@ public class UserServiceTest {
         userService.updateUser(updateData);
         verify(userRepository, never()).update(any(UserEntity.class));
     }
+
+    @Test
+    void deleteUserTest() {
+        UserEntity deletedUser = new UserEntity();
+        deletedUser.setId(1L);
+
+        userService.deleteUser(1L);
+        verify(userRepository, times(1)).deleteById(deletedUser.getId());
+
+    }
+
+    @Test
+    void showAllUsers_ShouldTriggerFindAll() {
+        when(userRepository.findAll()).thenReturn(java.util.Collections.emptyList());
+
+        userService.showAllUsers();
+
+        verify(userRepository, times(1)).findAll();
+    }
+
+    @Test
+    void showUserBasket_UserExists_ShouldTriggerFindByIdWithBasket() {
+        Long userId = 1L;
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+        user.setUsername("Ilya");
+        user.setProductBasket(new java.util.ArrayList<>());
+
+        when(userRepository.findByIdWithBasket(userId)).thenReturn(java.util.Optional.of(user));
+
+        userService.showUserBasket(userId);
+
+        verify(userRepository, times(1)).findByIdWithBasket(userId);
+    }
 }
